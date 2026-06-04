@@ -3,6 +3,9 @@
 import { useState } from 'react';
 import VehicleCarousel from '@/components/VehicleCarousel';
 import { Loader } from '@/components/ai-elements/loader';
+import { vehiclesMockData } from '../../data/vehiclesMockData'
+import './pageStyle.css'
+
 
 interface Vehicle {
 	vin: string;
@@ -174,7 +177,7 @@ export default function Home() {
 							<button
 								onClick={handleSearch}
 								disabled={loading}
-								className="w-full rounded-lg bg-blue-600 px-6 py-3 text-white font-semibold hover:bg-blue-700 disabled:bg-slate-400 disabled:cursor-not-allowed transition"
+								className="w-full rounded-lg bg-red-600 px-6 py-3 text-white font-semibold hover:bg-blue-700 disabled:bg-slate-400 disabled:cursor-not-allowed transition"
 							>
 								{loading ? 'Searching...' : 'Search Vehicles'}
 							</button>
