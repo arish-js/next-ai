@@ -49,7 +49,7 @@ export default function VehicleCarousel({ vehicles }: VehicleCarouselProps) {
 
   return (
     /* ⬇️ KEY CHANGE: Reduced max container width from max-w-5xl to max-w-4xl ⬇️ */
-    <div className='w-full max-w-4xl mx-auto bg-white text-slate-800 p-4 rounded-xl shadow-md relative overflow-hidden border border-slate-100'>
+    <div className='w-full  mx-auto bg-white text-slate-800 p-4 rounded-xl shadow-md relative overflow-hidden border border-slate-100'>
       {/* Background blurs adjusted down for smaller bounding footprint */}
       <div className='absolute top-0 right-0 w-48 h-48 bg-blue-50 rounded-full filter blur-2xl pointer-events-none' />
       <div className='absolute bottom-0 left-0 w-48 h-48 bg-indigo-50 rounded-full filter blur-2xl pointer-events-none' />
