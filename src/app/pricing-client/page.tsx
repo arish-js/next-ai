@@ -19,8 +19,10 @@ interface Vehicle {
   rate: number;
 }
 
+// create .env.local file and add this NEXT_PUBLIC_API_ENDPOINT=http://localhost:8080/pricingengine to execute locally
+
 const DEFAULT_API_ENDPOINT =
-  'http://localhost:8080/pricingengine/api/v1/vehicles/estimates?phoneNumber=2000013365&zipCode=10001';
+  '/api/v1/vehicles/estimates?phoneNumber=2000013365&zipCode=10001';
 
 export default function Home() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
@@ -30,7 +32,7 @@ export default function Home() {
   useEffect(() => {
     async function fetchVehicles() {
       const endpoint =
-        process.env.NEXT_PUBLIC_API_ENDPOINT || DEFAULT_API_ENDPOINT;
+        process.env.NEXT_PUBLIC_API_ENDPOINT + DEFAULT_API_ENDPOINT;
       try {
         const response = await fetch(endpoint);
         if (!response.ok) throw new Error('Failed to fetch users');
