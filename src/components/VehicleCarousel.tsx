@@ -194,22 +194,22 @@ export default function VehicleCarousel({ vehicles }: VehicleCarouselProps) {
         </div>
 
         {/* Action Arrows Buttons */}
-        <div className='flex space-x-1.5'>
-          <button
-            onClick={handlePrev}
-            className='bg-white hover:bg-slate-50 text-slate-600 active:scale-95 w-8 h-8 rounded-md shadow-sm border border-slate-200 flex items-center justify-center transition-all'
-            aria-label='Previous Page'
-          >
-            <ArrowLeft className='w-3.5 h-3.5' />
-          </button>
-          <button
-            onClick={handleNext}
-            className='bg-white hover:bg-slate-50 text-slate-600 active:scale-95 w-8 h-8 rounded-md shadow-sm border border-slate-200 flex items-center justify-center transition-all'
-            aria-label='Next Page'
-          >
-            <ArrowRight className='w-3.5 h-3.5' />
-          </button>
-        </div>
+      </div>
+      <div className='flex space-x-1.5'>
+        <button
+          onClick={handlePrev}
+          className='bg-white hover:bg-slate-50 text-slate-600 active:scale-95 w-8 h-8 rounded-md shadow-sm border border-slate-200 flex items-center justify-center transition-all'
+          aria-label='Previous Page'
+        >
+          <ArrowLeft className='w-3.5 h-3.5' />
+        </button>
+        <button
+          onClick={handleNext}
+          className='bg-white hover:bg-slate-50 text-slate-600 active:scale-95 w-8 h-8 rounded-md shadow-sm border border-slate-200 flex items-center justify-center transition-all'
+          aria-label='Next Page'
+        >
+          <ArrowRight className='w-3.5 h-3.5' />
+        </button>
       </div>
     </div>
   );
