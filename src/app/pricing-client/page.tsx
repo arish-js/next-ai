@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import VehicleCarousel from '@/components/VehicleCarousel';
 import { Loader } from '@/components/ai-elements/loader';
-import { vehiclesMockData } from '../../data/vehiclesMockData'
+// import { vehiclesMockData } from '../../data/vehiclesMockData'
 import './pageStyle.css'
 
 
@@ -34,6 +34,14 @@ export default function Home() {
 
 	const [loading, setLoading] = useState(false);
 
+	const [allVehicles, setAllVehicles] = useState<Vehicle[]>([]);
+	const [isFilterd, setFiltered] = useState(false)
+
+	const [vehicleType, setVehicleType] = useState('');
+	const [year, setYear] = useState('');
+	const [make, setMake] = useState('');
+	const [model, setModel] = useState('');
+
 	const validateForm = () => {
 		let valid = true;
 
@@ -61,6 +69,10 @@ export default function Home() {
 
 	const handleSearch = async () => {
 		setApiError('');
+		setVehicleType('');
+		setYear('');
+		setMake('');
+		setModel('');
 
 		if (!validateForm()) {
 			setVehicles([]);
@@ -85,12 +97,13 @@ export default function Home() {
 			}
 
 			const data = await response.json();
-
+			
 			if (!data || data.length === 0) {
 				setApiError('No vehicles found for the provided details.');
 				return;
 			}
 
+			setAllVehicles(data);
 			setVehicles(data);
 		} catch (error) {
 			setVehicles([]);
@@ -102,6 +115,62 @@ export default function Home() {
 		} finally {
 			setLoading(false);
 		}
+	};
+
+	const vehicleTypes = [
+		...new Set(allVehicles.map((v) => v.vehicleType)),
+	];
+
+	const years = [
+		...new Set(allVehicles.map((v) => v.modelYear)),
+	].sort((a, b) => Number(b) - Number(a));
+
+	const makes = [
+		...new Set(
+			allVehicles
+				.filter(
+					(v) =>
+						!vehicleType ||
+						v.vehicleType === vehicleType
+				)
+				.map((v) => v.make)
+		),
+	];
+
+	const models = [
+		...new Set(
+			allVehicles
+				.filter(
+					(v) =>
+						(!vehicleType ||
+							v.vehicleType === vehicleType) &&
+						(!make ||
+							v.make === make)
+				)
+				.map((v) => v.model)
+		),
+	];
+
+	const filterVehicles = (
+		selectedVehicleType = vehicleType,
+		selectedYear = year,
+		selectedMake = make,
+		selectedModel = model
+	) => {
+		const filteredVehicles = allVehicles.filter(
+			(vehicle) =>
+				(!selectedVehicleType ||
+					vehicle.vehicleType === selectedVehicleType) &&
+				(!selectedYear ||
+					vehicle.modelYear === selectedYear) &&
+				(!selectedMake ||
+					vehicle.make === selectedMake) &&
+				(!selectedModel ||
+					vehicle.model === selectedModel)
+		);
+
+		setFiltered(true)
+		setVehicles(filteredVehicles);
 	};
 
 	return (
@@ -184,6 +253,193 @@ export default function Home() {
 						</div>
 					</div>
 				</div>
+
+				{allVehicles.length > 0 && (
+					<div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-6 mb-6">
+
+						<div className="flex items-center justify-between mb-4">
+							<h2 className="text-lg font-semibold">
+								Filter Vehicles
+							</h2>
+
+							{
+								isFilterd && (<button
+									onClick={() => {
+										setVehicleType('');
+										setYear('');
+										setMake('');
+										setModel('');
+										setVehicles(allVehicles);
+										setFiltered(false)
+									}}
+									className="px-4 py-2 rounded-lg bg-slate-600 text-white hover:bg-slate-700"
+								>
+									Rest
+								</button>)
+							}
+
+						</div>
+
+						<div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+
+							{/* Vehicle Type */}
+
+							<div>
+								<label className="block text-sm font-medium mb-2">
+									Vehicle Type
+								</label>
+
+								<select
+									value={vehicleType}
+									onChange={(e) => {
+										const value = e.target.value;
+
+										setVehicleType(value);
+										setMake('');
+										setModel('');
+
+										filterVehicles(
+											value,
+											year,
+											'',
+											''
+										);
+									}}
+									className="w-full border rounded-lg px-4 py-3"
+								>
+									<option value="">
+										All Vehicle Types
+									</option>
+
+									{vehicleTypes.map((type) => (
+										<option
+											key={type}
+											value={type}
+										>
+											{type}
+										</option>
+									))}
+								</select>
+							</div>
+
+							{/* Year */}
+
+							<div>
+								<label className="block text-sm font-medium mb-2">
+									Year
+								</label>
+
+								<select
+									value={year}
+									onChange={(e) => {
+										const value = e.target.value;
+
+										setYear(value);
+
+										filterVehicles(
+											vehicleType,
+											value,
+											make,
+											model
+										);
+									}}
+									className="w-full border rounded-lg px-4 py-3"
+								>
+									<option value="">
+										All Years
+									</option>
+
+									{years.map((year) => (
+										<option
+											key={year}
+											value={year}
+										>
+											{year}
+										</option>
+									))}
+								</select>
+							</div>
+
+							{/* Make */}
+
+							<div>
+								<label className="block text-sm font-medium mb-2">
+									Make
+								</label>
+
+								<select
+									value={make}
+									onChange={(e) => {
+										const value = e.target.value;
+
+										setMake(value);
+										setModel('');
+
+										filterVehicles(
+											vehicleType,
+											year,
+											value,
+											''
+										);
+									}}
+									className="w-full border rounded-lg px-4 py-3"
+								>
+									<option value="">
+										All Makes
+									</option>
+
+									{makes.map((make) => (
+										<option
+											key={make}
+											value={make}
+										>
+											{make}
+										</option>
+									))}
+								</select>
+							</div>
+
+							{/* Model */}
+
+							<div>
+								<label className="block text-sm font-medium mb-2">
+									Model
+								</label>
+
+								<select
+									value={model}
+									onChange={(e) => {
+										const value = e.target.value;
+
+										setModel(value);
+
+										filterVehicles(
+											vehicleType,
+											year,
+											make,
+											value
+										);
+									}}
+									className="w-full border rounded-lg px-4 py-3"
+								>
+									<option value="">
+										All Models
+									</option>
+
+									{models.map((model) => (
+										<option
+											key={model}
+											value={model}
+										>
+											{model}
+										</option>
+									))}
+								</select>
+							</div>
+
+						</div>
+					</div>
+				)}
 
 				{/* Loader */}
 				{loading && (
